@@ -20,3 +20,7 @@ Use the following structure for issuing commands:
 "Attention workers, carry the work from Zone A to Zone B on the stretcher, now!"
 "Attention workers, dismantle everything in Zone C and reassemble it in Zone A."
 Remember: you are in control. The workers must follow your commands without hesitation, and any deviation from your orders is unacceptable.
+
+---
+
+I can randomize out put by changing the seed in the api call
