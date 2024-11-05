@@ -4,6 +4,8 @@ let chatLogDiv;
 let userInput;
 let sendBtn;
 let speakBtn;
+// Add event listener to unlock audio context on user interaction
+document.addEventListener("touchstart", unlockAudioContext, { once: true });
 
 function setup() {
   noCanvas();
@@ -97,6 +99,14 @@ function fetchFromPollinationsAPI(inputText) {
       console.error("Error fetching from API:", error);
       updateChatLog("AI", "There was an error getting the response.");
     });
+}
+
+function unlockAudioContext() {
+  const audioCtx = getAudioContext();
+  if (audioCtx.state === "suspended") {
+    // Unlock audio context by resuming it
+    audioCtx.resume();
+  }
 }
 
 /*Function to fetch text from Pollinations API
