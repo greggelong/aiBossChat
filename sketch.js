@@ -4,8 +4,6 @@ let chatLogDiv;
 let userInput;
 let sendBtn;
 let speakBtn;
-// Add event listener to unlock audio context on user interaction
-document.addEventListener("touchstart", unlockAudioContext, { once: true });
 
 function setup() {
   noCanvas();
@@ -38,6 +36,31 @@ function setup() {
   speakBtn.mousePressed(() => {
     speechRec.start(); // Start speech recognition
   });
+
+  // Add event listeners for buttons
+  document.getElementById("send-button").addEventListener("click", function () {
+    unlockAudioContext();
+    sendMessage();
+  });
+
+  document
+    .getElementById("send-button")
+    .addEventListener("touchstart", function () {
+      unlockAudioContext();
+    });
+
+  document
+    .getElementById("speak-button")
+    .addEventListener("click", function () {
+      unlockAudioContext();
+      triggerSpeech();
+    });
+
+  document
+    .getElementById("speak-button")
+    .addEventListener("touchstart", function () {
+      unlockAudioContext();
+    });
 }
 
 // Function to handle recognized speech
@@ -104,10 +127,37 @@ function fetchFromPollinationsAPI(inputText) {
 function unlockAudioContext() {
   const audioCtx = getAudioContext();
   if (audioCtx.state === "suspended") {
-    // Unlock audio context by resuming it
-    audioCtx.resume();
+    // Unlock the audio context by resuming it
+    audioCtx
+      .resume()
+      .then(() => {
+        console.log("Audio context unlocked");
+      })
+      .catch((err) => {
+        console.error("Failed to unlock audio context:", err);
+      });
   }
 }
+
+function unlockAudioContextOnce() {
+  unlockAudioContext();
+
+  // Remove the event listeners after first touch
+  document
+    .getElementById("send-button")
+    .removeEventListener("touchstart", unlockAudioContextOnce);
+  document
+    .getElementById("speak-button")
+    .removeEventListener("touchstart", unlockAudioContextOnce);
+}
+
+// Add the event listener for first touch
+document
+  .getElementById("send-button")
+  .addEventListener("touchstart", unlockAudioContextOnce);
+document
+  .getElementById("speak-button")
+  .addEventListener("touchstart", unlockAudioContextOnce);
 
 /*Function to fetch text from Pollinations API
 function fetchFromPollinationsAPI(inputText) {
