@@ -54,7 +54,52 @@ function updateChatLog(user, text) {
   chatLogDiv.elt.scrollTop = chatLogDiv.elt.scrollHeight; // Auto-scroll to bottom
 }
 
-// Function to fetch text from Pollinations API
+function fetchFromPollinationsAPI(inputText) {
+  const apiUrl = "https://text.pollinations.ai/";
+
+  fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an artistic AI assistant obsessed with bones, trees, and performance art.",
+        },
+        { role: "user", content: inputText },
+      ],
+      seed: 42,
+      jsonMode: true, // Ensures JSON response is preferred
+      model: "mistral",
+    }),
+  })
+    .then((response) => {
+      const contentType = response.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        return response.json(); // Parse JSON if content type is JSON
+      } else {
+        return response.text(); // Otherwise, fallback to plain text
+      }
+    })
+    .then((data) => {
+      if (typeof data === "object" && data.text) {
+        updateChatLog("AI", data.text); // Print response to chat if it's JSON
+        speechSynth.speak(data.text); // Speak response
+      } else {
+        updateChatLog("AI", `Non-JSON response: ${data}`);
+        speechSynth.speak(data); // Speak the plain text data
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching from API:", error);
+      updateChatLog("AI", "There was an error getting the response.");
+    });
+}
+
+/*Function to fetch text from Pollinations API
 function fetchFromPollinationsAPI(inputText) {
   let apiUrl = `https://text.pollinations.ai/${encodeURIComponent(
     inputText
@@ -91,3 +136,4 @@ function fetchFromPollinationsAPI(inputText) {
       updateChatLog("AI", "There was an error getting the response.");
     });
 }
+*/
