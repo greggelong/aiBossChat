@@ -38,26 +38,24 @@ function setup() {
   });
 
   // Add event listeners for buttons
-  document.getElementById("send-button").addEventListener("click", function () {
+  document.getElementById("sendBtn").addEventListener("click", function () {
     unlockAudioContext();
     sendMessage();
   });
 
   document
-    .getElementById("send-button")
+    .getElementById("sendBtn")
     .addEventListener("touchstart", function () {
       unlockAudioContext();
     });
 
-  document
-    .getElementById("speak-button")
-    .addEventListener("click", function () {
-      unlockAudioContext();
-      triggerSpeech();
-    });
+  document.getElementById("speakBtn").addEventListener("click", function () {
+    unlockAudioContext();
+    triggerSpeech();
+  });
 
   document
-    .getElementById("speak-button")
+    .getElementById("speakBtn")
     .addEventListener("touchstart", function () {
       unlockAudioContext();
     });
@@ -144,20 +142,22 @@ function unlockAudioContextOnce() {
 
   // Remove the event listeners after first touch
   document
-    .getElementById("send-button")
+    .getElementById("sendBtn")
     .removeEventListener("touchstart", unlockAudioContextOnce);
   document
-    .getElementById("speak-button")
+    .getElementById("speakBtn")
     .removeEventListener("touchstart", unlockAudioContextOnce);
 }
 
-// Add the event listener for first touch
-document
-  .getElementById("send-button")
-  .addEventListener("touchstart", unlockAudioContextOnce);
-document
-  .getElementById("speak-button")
-  .addEventListener("touchstart", unlockAudioContextOnce);
+function triggerSpeech(text) {
+  if (text) {
+    const speechSynth = new p5.Speech(); // Create a new speech synthesis instance
+    speechSynth.setLang("en-US"); // Set the language
+    speechSynth.speak(text); // Speak the provided text
+  } else {
+    console.error("No text provided to speak.");
+  }
+}
 
 /*Function to fetch text from Pollinations API
 function fetchFromPollinationsAPI(inputText) {
