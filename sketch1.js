@@ -24,6 +24,7 @@ function setup() {
   // Handle Send button for typed text
   sendBtn.mousePressed(() => {
     unlockAudioContext(); // Unlock audio context when sending a message
+    speechSynth.speak("sending");
     let userText = userInput.value();
     if (userText) {
       updateChatLog("You", userText);
@@ -35,6 +36,7 @@ function setup() {
   // Handle Speak button for spoken text
   speakBtn.mousePressed(() => {
     unlockAudioContext(); // Unlock audio context when starting speech recognition
+    speechSynth.speak("listening");
     speechRec.start(); // Start speech recognition
   });
 
