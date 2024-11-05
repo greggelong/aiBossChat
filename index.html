@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>p5.js Chat Interface</title>
+    <title>AI Boss Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/IDMNYU/p5.js-speech@0.0.3/lib/p5.speech.js"></script>
@@ -20,7 +20,15 @@ body {
   justify-content: center;
   background-color: #f5f5f5;
   height: 100vh;
+  background-image: url('https://greggelong.github.io/artWorkerClass/bg.jpg'); /* Path to your image */
+  background-size: cover;           /* Ensure the image covers the whole screen */
+  background-position: center;      /* Center the background image */
+  background-repeat: no-repeat;     /* Don't repeat the image */
+  background-attachment: fixed;     /* Keep the background fixed during scrolling */
+  
 }
+
+ 
 
 /* Chat log container */
 #chatLog {
@@ -156,6 +164,7 @@ button:hover {
     </style>
   </head>
   <body>
+    
     <div id="chatLog">Chat log...</div>
     <input type="text" id="userInput" placeholder="Type your message here..." />
     <button id="sendBtn">Send</button>
