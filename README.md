@@ -33,3 +33,5 @@ Remember: you are in control. The workers must follow your commands without hesi
 ---
 
 I can randomize out put by changing the seed in the api call
+
+try on laptop go 3
