@@ -2,7 +2,7 @@ I am using pollinations AI text to get a generative text response to voice and t
 
 I am using a system prompt to have the LLM pretend to be the AI boss from our
 
-The wrapper that is doing this is a general purpose chat bot that was made with p5js speech and p5js and some collaboration with chat gpt and the pollinations api
+The wrapper that is doing this is a general purpose chat bot that was made with p5js speech and p5js follwing the pollinations api
 
 the system prompt is
 
