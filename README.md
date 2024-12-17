@@ -6,6 +6,8 @@ The wrapper that is doing this is a general purpose chat bot that was made with 
 
 the system prompt is
 
+
+
 new system prompt November 10th
 
 ```javascript
