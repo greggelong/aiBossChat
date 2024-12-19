@@ -4,6 +4,7 @@ let chatLogDiv;
 let userInput;
 let sendBtn;
 let speakBtn;
+let killBtn
 
 function setup() {
   noCanvas();
@@ -13,6 +14,7 @@ function setup() {
   userInput = select("#userInput");
   sendBtn = select("#sendBtn");
   speakBtn = select("#speakBtn");
+  killBtn = select("#killBtn");
 
   // Initialize p5.speech for recognition and synthesis
   speechRec = new p5.SpeechRec("en-US", gotSpeech);
@@ -44,6 +46,13 @@ function setup() {
   // Unlock audio context on touch or click for mobile support
   [sendBtn.elt, speakBtn.elt].forEach((btn) => {
     btn.addEventListener("touchstart", unlockAudioContext);
+  });
+
+
+  // handel kill
+  killBtn.mousePressed(() => {
+    print("killed");
+    speechSynth.stop(); // Stop the speech
   });
 }
 
