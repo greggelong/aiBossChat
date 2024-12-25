@@ -138,13 +138,28 @@ On Algorithmic Art:
         return response.text(); // Otherwise, fallback to plain text
       }
     })
-    .then((data) => {
+    /* .then((data) => {
       if (typeof data === "object" && data.text) {
         updateChatLog("AI", data.text); // Print response to chat if it's JSON
         speechSynth.speak(data.text); // Speak response
       } else {
         updateChatLog("AI", `: ${data}`);
         speechSynth.speak(data); // Speak the plain text data
+      }
+    }) */
+    .then((data) => {
+      if (typeof data === "object" && data.text) {
+        updateChatLog("AI", data.text); // Print response to chat if it's JSON
+
+        // Sanitize the text before speaking
+        const sanitizedText = data.text.replace(/\*/g, "");
+        speechSynth.speak(sanitizedText); // Speak sanitized response
+      } else {
+        updateChatLog("AI", `: ${data}`);
+
+        // Sanitize the plain text data before speaking
+        const sanitizedText = data.replace(/\*/g, "");
+        speechSynth.speak(sanitizedText); // Speak sanitized plain text data
       }
     })
     .catch((error) => {
