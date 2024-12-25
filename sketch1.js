@@ -166,11 +166,26 @@ function unlockAudioContext() {
       });
   }
 }
-
+/*
 function triggerSpeech(text) {
   if (text) {
     speechSynth.setLang("en-US"); // Set the language
     speechSynth.speak(text); // Speak the provided text
+  } else {
+    console.error("No text provided to speak.");
+  }
+}
+*/
+function triggerSpeech(text) {
+  if (text) {
+    // Remove all * characters using a regular expression
+    const sanitizedText = text.replace(/\*/g, "");
+
+    // Set the language for speech synthesis
+    speechSynth.setLang("en-US");
+
+    // Speak the sanitized text
+    speechSynth.speak(sanitizedText);
   } else {
     console.error("No text provided to speak.");
   }
