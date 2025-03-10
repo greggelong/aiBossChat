@@ -126,7 +126,7 @@ On Algorithmic Art:
         { role: "user", content: inputText },
       ],
       seed: 42,
-      jsonMode: true,
+      jsonMode: false,
       model: "mistral",
     }),
   })
