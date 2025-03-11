@@ -50,3 +50,7 @@ https://greggelong.github.io/aiBossChat/
 feb 15 2025
 
 I can use the tts and asr (speech recognition in Edge, and I don't need to use a vpn and it will listen. only on windows machine)
+
+march 11 this
+
+https://techcommunity.microsoft.com/discussions/edgeinsiderdiscussions/web-speech-api-stopped-working-on-edge-starting-with-v-134/4391156
