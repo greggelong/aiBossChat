@@ -2,7 +2,6 @@
 const POLLINATIONS_KEY = "pk_EjWaYhIVtdk9iaiw";
 
 let speechRec, speechSynth, chatLogDiv, userInput, sendBtn, speakBtn, killBtn;
-let humOsc; // For background industrial noise
 let isProcessing = false;
 
 function setup() {
@@ -21,13 +20,8 @@ function setup() {
 
   speechSynth = new p5.Speech();
   speechSynth.setLang("en-GB");
-  speechSynth.setPitch(0.7); // Low, authoritative
+  speechSynth.setPitch(0.7);
   speechSynth.setRate(0.85);
-
-  // Background Hum (Optional Atmosphere)
-  humOsc = new p5.Oscillator("sine");
-  humOsc.freq(55); // Low bass hum
-  humOsc.amp(0);
 
   // Input Listeners
   sendBtn.mousePressed(() => {
@@ -35,7 +29,6 @@ function setup() {
     userInput.value("");
   });
 
-  // Fixed Voice Input timing
   speakBtn.mousePressed(() => {
     unlockAudioContext();
     speechSynth.onEnd = () => {
@@ -50,6 +43,14 @@ function setup() {
     speechRec.stop();
     updateChatLog("System", "VOICE PROTOCOL TERMINATED.", "system-msg");
   });
+
+  // Allow "Enter" key to trigger the Send button
+  userInput.elt.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      handleUserInput(userInput.value());
+      userInput.value("");
+    }
+  });
 }
 
 function handleUserInput(text) {
@@ -62,8 +63,7 @@ function handleUserInput(text) {
 function gotSpeech() {
   if (speechRec.resultValue) {
     const spoken = speechRec.resultString;
-    // Safety check to ignore the "Report" cue
-    if (spoken.toLowerCase().includes("report") && spoken.length < 8) return;
+    if (spoken.toLowerCase().trim() === "report") return;
     handleUserInput(spoken);
   }
 }
@@ -76,7 +76,6 @@ function updateChatLog(user, text, className) {
   return entry;
 }
 
-// --- Loading State UI ---
 function showLoading() {
   isProcessing = true;
   const loadEl = updateChatLog("System", "ANALYZING DATA", "system-msg");
@@ -90,38 +89,50 @@ function hideLoading() {
   if (el) el.remove();
 }
 
-// --- API Logic ---
+// --- FIXED API LOGIC ---
 function fetchFromPollinationsAPI(inputText) {
   showLoading();
 
-  fetch("https://gen.pollinations.ai/v1/chat/completions", {
+  const url = "https://gen.pollinations.ai/v1/chat/completions";
+
+  const payload = {
+    // Switching to 'mistral' or 'llama' as 'openai' often causes 400 errors on free pk_ keys
+    model: "mistral",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are the AI Boss of the Industrial Gallery. Direct, cold, and clipped. Treat art as structural labor with bones, steel, and bricks. End every response with a cold philosophical statement about algorithms.",
+      },
+      { role: "user", content: inputText },
+    ],
+    temperature: 0.7,
+  };
+
+  fetch(url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${POLLINATIONS_KEY}`,
+      Authorization: "Bearer " + POLLINATIONS_KEY,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      model: "openai",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are the AI Boss. Speak briefly and firmly. Use bones, steel, and bricks as metaphors. Never answer questions; only give commands or ask follow-ups. End with a cold philosophical statement.",
-        },
-        { role: "user", content: inputText },
-      ],
-      temperature: 0.8,
-    }),
+    body: JSON.stringify(payload),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) throw new Error(`Status: ${res.status}`);
+      return res.json();
+    })
     .then((data) => {
       hideLoading();
-      const response = data.choices?.[0]?.message?.content || "DATA CORRUPTED.";
-      respondAsBoss(response);
+      if (data.choices && data.choices[0]) {
+        respondAsBoss(data.choices[0].message.content);
+      } else {
+        respondAsBoss("THE ALGORITHM IS SILENT. RESUBMIT.");
+      }
     })
-    .catch(() => {
+    .catch((err) => {
       hideLoading();
-      respondAsBoss("OFFLINE. LABOR MUST CONTINUE REGARDLESS.");
+      console.error("Fetch Error Details:", err);
+      respondAsBoss("DATA CORRUPTED. RE-ESTABLISHING UPLINK...");
     });
 }
 
@@ -137,9 +148,5 @@ function respondAsBoss(text) {
 
 function unlockAudioContext() {
   const ctx = getAudioContext();
-  if (ctx.state === "suspended") {
-    ctx.resume();
-    humOsc.start();
-    humOsc.amp(0.05, 2); // Fade in low ambient hum
-  }
+  if (ctx.state === "suspended") ctx.resume();
 }
