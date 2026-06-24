@@ -1,7 +1,3 @@
-以下是根据 Pollinations.ai 应用提交要求和项目元数据规范为你定制的 `README.md`，你可以直接使用或根据需要微调：
-
----
-
 # AI Boss Chat 🎙️🤖
 
 > Command the Art Workers through voice or text. The AI Boss speaks English, then translates into Chinese — all powered by Pollinations.ai.
